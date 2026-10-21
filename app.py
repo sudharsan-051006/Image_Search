@@ -209,4 +209,4 @@ with gr.Blocks(title="AI Image Search", theme=gr.themes.Soft()) as demo:
     )
 
 if __name__ == "__main__":
-    demo.queue(default_concurrency_limit=2).launch()
+    demo.queue(default_concurrency_limit=2).launch(ssr_mode=False)
