@@ -1,35 +1,26 @@
----
-title: AI Image Search
-emoji: 🔎
-colorFrom: blue
-colorTo: indigo
-sdk: gradio
-sdk_version: 5.49.1
-app_file: app.py
-pinned: false
----
+Render Image Search API
+Render settings
+- Build command: pip install -r requirements.txt
+- Start command: uvicorn main:app --host 0.0.0.0 --port $PORT
+Environment variables
+- UNSPLASH_ACCESS_KEY (required): your Unsplash API Access Key.
+- API_ACCESS_KEY (recommended): your own API key for clients. When set, callers must send it in the X-API-Key header. If unset, API-key authentication is disabled.
+Never commit keys to GitHub.
+Endpoints
+- GET / — service information
+- GET /health — health check
+- POST /search — find photos from a sentence
+Example JSON body:
+{"sentence":"A boy playing cricket in a village at sunset","count":5}
 
-# AI Image Search
+Example Python client:
+import requests
 
-A Gradio app that uses local `google/flan-t5-small` to turn natural-language descriptions
-into concise image-search keywords, then searches Unsplash.
-
-## Configure the Unsplash key
-
-In your Space, open **Settings → Variables and secrets → New secret**.
-
-- Name: `UNSPLASH_ACCESS_KEY`
-- Value: your Unsplash API Access Key
-
-Do not commit your API key into `app.py` or any public file.
-
-The model is downloaded from Hugging Face on the first build/run. Once the model files are cached
-in the running environment, inference runs locally in the Space. Unsplash image search still
-requires an internet connection and an API key.
-
-## Run locally
-
-```bash
-pip install -r requirements.txt
-python app.py
-```
+response = requests.post(
+    "https://YOUR-SERVICE.onrender.com/search",
+    headers={"X-API-Key": "YOUR_API_ACCESS_KEY"},
+    json={"sentence": "A boy playing cricket in a village at sunset", "count": 5},
+    timeout=60,
+)
+print(response.json())
+This API uses lightweight keyword extraction, not a large AI model, to keep memory usage low on free hosting. Unsplash still requires internet access and has its own rate limits.
