@@ -209,4 +209,8 @@ with gr.Blocks(title="AI Image Search", theme=gr.themes.Soft()) as demo:
     )
 
 if __name__ == "__main__":
-    demo.queue(default_concurrency_limit=2).launch(ssr_mode=False)
+    demo.queue(default_concurrency_limit=2).launch(
+        server_name="0.0.0.0",
+        server_port=int(os.environ.get("PORT", "7860")),
+        ssr_mode=False,
+    )
