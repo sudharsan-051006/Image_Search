@@ -43,13 +43,26 @@ def simple_keywords(sentence, max_words=7):
     return " ".join(result) if result else " ".join(words)
 
 
+import os
+from transformers import AutoTokenizer, AutoModelForSeq2SeqLM
+
 def get_local_model():
     global _tokenizer, _model
+
     with _model_lock:
         if _tokenizer is None or _model is None:
-            _tokenizer = AutoTokenizer.from_pretrained(MODEL_NAME)
-            _model = AutoModelForSeq2SeqLM.from_pretrained(MODEL_NAME)
+            token = os.environ.get("HF_TOKEN") or None
+
+            _tokenizer = AutoTokenizer.from_pretrained(
+                MODEL_NAME,
+                token=token,
+            )
+            _model = AutoModelForSeq2SeqLM.from_pretrained(
+                MODEL_NAME,
+                token=token,
+            )
             _model.eval()
+
     return _tokenizer, _model
 
 
